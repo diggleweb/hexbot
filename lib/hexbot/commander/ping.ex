@@ -7,6 +7,6 @@ defmodule Hexbot.Commander.PingCommander do
 
   @impl Hexbot.Commander
   def handle(_msg) do
-    IO.puts("handling...")
+    IO.puts("Handling #{command()}")
   end
 end

@@ -32,11 +32,23 @@ defmodule Hexbot.LoopServer do
     msg
   end
 
+  defp dispatch_handler(msg) do
+    applying = fn handler ->
+      if handler.match?(msg), do: handler.handle(msg)
+    end
+
+    handlers = FilterManager.handlers()
+    Enum.each(handlers, applying)
+
+    msg
+  end
+
   def handle_update(update) do
     msg = Map.get(update, :message)
 
     msg
     |> dispatch_commander
+    |> dispatch_handler
   end
 
   defp loop do

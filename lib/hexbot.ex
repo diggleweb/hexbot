@@ -3,9 +3,10 @@ defmodule Hexbot do
 
   use Application
   alias Hexbot.Commander.{PingCommander}
+  alias Hexbot.Handler.{TextHandler}
 
   def start(_type, _args) do
-    filters = [commanders: [PingCommander]]
+    filters = [commanders: [PingCommander], handlers: [TextHandler]]
 
     children = [
       {Hexbot.FilterManager, filters},

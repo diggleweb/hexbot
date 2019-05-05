@@ -5,11 +5,15 @@ defmodule Hexbot.FilterManager do
 
   def start_link(opts) do
     commanders = Keyword.get(opts, :commanders, [])
-    data = [commanders: commanders]
-    Agent.start_link(fn -> data end, name: __MODULE__)
+    handlers = Keyword.get(opts, :handlers, [])
+    filters = [commanders: commanders, handlers: handlers]
+    Agent.start_link(fn -> filters end, name: __MODULE__)
   end
 
-  def commanders do
-    Agent.get(__MODULE__, fn filters -> Keyword.get(filters, :commanders, []) end)
+  defp get(key) do
+    Agent.get(__MODULE__, fn filters -> Keyword.get(filters, key, []) end)
   end
+
+  def commanders, do: get(:commanders)
+  def handlers, do: get(:handlers)
 end

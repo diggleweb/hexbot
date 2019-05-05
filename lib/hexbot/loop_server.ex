@@ -17,11 +17,11 @@ defmodule Hexbot.LoopServer do
 
   def handle_update(update) do
     msg = Map.get(update, :message)
-    msg |> Consumer.receive
+    msg |> Consumer.receive()
   end
 
-  defp loop do
-    updates = Nadia.get_updates()
+  defp loop(nextoffset \\ 0) do
+    updates = Nadia.get_updates(offset: nextoffset, limit: 50)
 
     updates =
       case updates do
@@ -35,8 +35,11 @@ defmodule Hexbot.LoopServer do
     updates
     |> Enum.each(&handle_update/1)
 
+    lastupdate = Enum.at(updates, -1)
+    lastoffset = if lastupdate, do: Map.get(lastupdate, :update_id), else: nextoffset - 1
+
     Process.sleep(1000)
-    loop()
+    loop(lastoffset + 1)
   end
 
   def start_link(_opts) do

@@ -1,18 +1,17 @@
 defmodule Hexbot do
-  @moduledoc """
-  Documentation for Hexbot.
-  """
+  @moduledoc false
 
-  @doc """
-  Hello world.
+  use Application
+  alias Hexbot.Commander.{PingCommander}
 
-  ## Examples
+  def start(_type, _args) do
+    filters = [commanders: [PingCommander]]
 
-      iex> Hexbot.hello()
-      :world
+    children = [
+      {Hexbot.FilterManager, filters},
+      {Hexbot.LoopServer, []}
+    ]
 
-  """
-  def hello do
-    :world
+    Supervisor.start_link(children, strategy: :one_for_one)
   end
 end

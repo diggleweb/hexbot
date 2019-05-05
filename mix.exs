@@ -15,6 +15,7 @@ defmodule Hexbot.MixProject do
   def application do
     [
       applications: [:nadia],
+      mod: {Hexbot, []},
       extra_applications: [:logger]
     ]
   end

@@ -10,7 +10,8 @@ defmodule Hexbot do
 
     children = [
       {Hexbot.FilterManager, filters},
-      {Hexbot.LoopServer, []}
+      {Hexbot.LoopServer, []},
+      {Hexbot.Consumer, []}
     ]
 
     Supervisor.start_link(children, strategy: :one_for_one)

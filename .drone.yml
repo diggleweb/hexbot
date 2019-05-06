@@ -11,7 +11,7 @@ pipeline:
       - export MIX_ENV=prod
       - mix do clean, deps.get, release
     volumes:
-      - $PROD_PATH:/prod
+      - /home/ec2-user/hexbot:/prod
 
   build-image:
     image: docker

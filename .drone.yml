@@ -7,7 +7,8 @@ pipeline:
   build:
     image: bluerain/elixir:1.8.1-slim
     commands:
-      - cp /prod/prod.secret.exs .
+      - cp /prod/prod.secret.exs config/
+      - touch config/dev.secret.exs
       - export MIX_ENV=prod
       - mix do clean, deps.get, release
     volumes:

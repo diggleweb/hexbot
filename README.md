@@ -6,7 +6,7 @@ A Telegram bot that adapts inline search to hex.pm
 
 This bot enables inline mode, at it for searching.
 
-![demo](https://github.com/elixirchina/hexbot/raw/master/demo/demo.gif)
+![demo](https://github.com/elixirchina/hexbot/raw/master/demo/demo2.gif)
 
 ## 加入我们
 

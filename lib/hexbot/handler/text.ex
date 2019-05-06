@@ -12,7 +12,6 @@ defmodule Hexbot.Handler.TextHandler do
 
   @impl Hexbot.Handler
   def handle(_msg) do
-    # text = Map.get(msg, :text)
-    # IO.puts("Text message: #{text}")
+    :ok
   end
 end

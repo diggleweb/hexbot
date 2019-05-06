@@ -13,12 +13,12 @@ defmodule Hexbot.Consumer do
     DynamicSupervisor.init(strategy: :one_for_one)
   end
 
-  defp dispatch_commander(msg) do
+  defp dispatch_commander(msg, username) do
     text = Map.get(msg, :text)
 
     applying = fn commander ->
       name = commander.command()
-      match = text == name || text == "#{name}@elixir_hexbot"
+      match = text == name || text == "#{name}@#{username}"
       if match, do: commander.handle(msg)
     end
 
@@ -41,13 +41,13 @@ defmodule Hexbot.Consumer do
     msg
   end
 
-  def receive(update) do
+  def receive(update, username) do
     inline_query = Map.get(update, :inline_query)
     msg = Map.get(update, :message)
 
     dispatch_msg = fn ->
       msg
-      |> dispatch_commander
+      |> dispatch_commander(username)
       |> dispatch_handler
     end
 

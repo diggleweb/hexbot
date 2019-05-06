@@ -4,22 +4,18 @@ defmodule Hexbot.LoopServer do
   use GenServer
   alias Hexbot.Consumer
 
-  @timeout 5000
+  @timeout 0
 
-  def init(_) do
-    {:ok, %{}, @timeout}
+  def init(state) do
+    {:ok, state, @timeout}
   end
 
-  def handle_info(:timeout, state) do
-    loop()
+  def handle_info(:timeout, %{username: username} = state) do
+    loop(username)
     {:noreply, state}
   end
 
-  def handle_update(update) do
-    update |> Consumer.receive()
-  end
-
-  defp loop(nextoffset \\ 0) do
+  defp loop(username, nextoffset \\ 0) do
     updates = Nadia.get_updates(offset: nextoffset, limit: 50)
 
     updates =
@@ -31,17 +27,20 @@ defmodule Hexbot.LoopServer do
           []
       end
 
+    handle_update = fn update -> update |> Consumer.receive(username) end
+
     updates
-    |> Enum.each(&handle_update/1)
+    |> Enum.each(handle_update)
 
     lastupdate = Enum.at(updates, -1)
     lastoffset = if lastupdate, do: Map.get(lastupdate, :update_id), else: nextoffset - 1
 
     Process.sleep(1000)
-    loop(lastoffset + 1)
+    loop(username, lastoffset + 1)
   end
 
   def start_link(_opts) do
-    GenServer.start_link(__MODULE__, [], name: __MODULE__)
+    {:ok, %Nadia.Model.User{username: username}} = Nadia.get_me()
+    GenServer.start_link(__MODULE__, %{username: username}, name: __MODULE__)
   end
 end

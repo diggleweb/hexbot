@@ -1,0 +1,21 @@
+clone:
+  git:
+    image: plugins/git
+    recursive: false
+
+pipeline:
+  build:
+    image: bluerain/elixir:1.8.1-slim
+    commands:
+      - cp /prod/prod.secret.exs .
+      - export MIX_ENV=prod
+      - mix do clean, deps.get, release
+    volumes:
+      - $PROD_PATH:/prod
+
+  build-image:
+    image: docker
+    commands:
+      - docker build . -t bluerain/hexbot
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

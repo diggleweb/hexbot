@@ -29,7 +29,8 @@ defmodule Hexbot.MixProject do
       {:distillery, "~> 2.0"},
       {:nadia, "~> 0.5.0"},
       {:httpoison, "~> 1.5"},
-      {:floki, "~> 0.21.0"}
+      {:floki, "~> 0.21.0"},
+      {:jason, "~> 1.1"}
     ]
   end
 end

@@ -4,7 +4,4 @@ services:
   server:
     image: bluerain/hexbot
     stdin_open: true
-    environment:
-      HEXBOT_TOKEN: $HEXBOT_TOKEN
-
     restart: always

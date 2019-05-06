@@ -2,7 +2,7 @@ defmodule Hexbot.Consumer do
   @moduledoc false
 
   use DynamicSupervisor
-  alias Hexbot.FilterManager
+  alias Hexbot.{FilterManager, Query}
 
   def start_link(_opts) do
     DynamicSupervisor.start_link(__MODULE__, %{}, name: __MODULE__)
@@ -41,13 +41,24 @@ defmodule Hexbot.Consumer do
     msg
   end
 
-  def receive(msg) do
-    dispatch = fn ->
+  def receive(update) do
+    inline_query = Map.get(update, :inline_query)
+    msg = Map.get(update, :message)
+
+    dispatch_msg = fn ->
       msg
       |> dispatch_commander
       |> dispatch_handler
     end
 
-    DynamicSupervisor.start_child(__MODULE__, {Task, dispatch})
+    dispatch_search = fn ->
+      id = Map.get(inline_query, :id)
+      keywords = Map.get(inline_query, :query)
+      results = Query.from_hex_pm(keywords)
+      Nadia.answer_inline_query(id, results)
+    end
+
+    if msg, do: DynamicSupervisor.start_child(__MODULE__, {Task, dispatch_msg})
+    if inline_query, do: DynamicSupervisor.start_child(__MODULE__, {Task, dispatch_search})
   end
 end

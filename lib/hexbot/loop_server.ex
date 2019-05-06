@@ -16,8 +16,7 @@ defmodule Hexbot.LoopServer do
   end
 
   def handle_update(update) do
-    msg = Map.get(update, :message)
-    msg |> Consumer.receive()
+    update |> Consumer.receive()
   end
 
   defp loop(nextoffset \\ 0) do

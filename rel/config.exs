@@ -50,7 +50,8 @@ release :hexbot do
   set version: current_version(:hexbot)
   set applications: [
     :runtime_tools,
-    :jason
+    :jason,
+    :floki
   ]
 end
 

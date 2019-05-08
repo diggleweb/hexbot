@@ -2,11 +2,14 @@ defmodule Hexbot do
   @moduledoc false
 
   use Application
-  alias Hexbot.Commander.{StartCommander, PingCommander}
+  alias Hexbot.Commander.{StartCommander, PingCommander, SubscribeCommander}
   alias Hexbot.Handler.{TextHandler}
 
   def start(_type, _args) do
-    filters = [commanders: [StartCommander, PingCommander], handlers: [TextHandler]]
+    filters = [
+      commanders: [StartCommander, PingCommander, SubscribeCommander],
+      handlers: [TextHandler]
+    ]
 
     children = [
       {Hexbot.FilterManager, filters},

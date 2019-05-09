@@ -4,6 +4,7 @@ defmodule Hexbot.QueryTest do
   import Hexbot.Query
 
   test "from_hex_pm" do
-    from_hex_pm("ecto")
+    list = from_hex_pm("ecto")
+    assert length(list) > 0
   end
 end
